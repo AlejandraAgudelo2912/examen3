@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\PageCourseDetailsController;
 use App\Http\Controllers\PageDashboardController;
 use App\Http\Controllers\PageHomeController;
@@ -25,6 +26,10 @@ Route::get('courses/{course:slug}', PageCourseDetailsController::class)
 Route::middleware(['auth', 'can:buy-course'])
     ->post('courses/{course:slug}', PageCourseDetailsController::class)
     ->name('purchase');
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', AdminDashboardController::class)->name('admin.dashboard');
+});
 
 Route::middleware([
     'auth:sanctum',
