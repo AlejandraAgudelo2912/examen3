@@ -14,8 +14,9 @@
         <div class="p-4 text-lg font-bold">Admin Panel</div>
         <nav>
             <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-700">Crear Curso</a>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-700">Crear Video</a>
+            <a href="{{route('admin.courses.index')}}" class="block px-4 py-2 hover:bg-gray-700">Crear Curso</a>
+            <a href="{{route('admin.videos.index')}}" class="block px-4 py-2 hover:bg-gray-700">Crear Video</a>
+            <a href="{{route('admin.users.index')}}" class="block px-4 py-2 hover:bg-gray-700">Gestionar Usuarios</a>
         </nav>
     </aside>
 
