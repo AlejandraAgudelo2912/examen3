@@ -11,6 +11,17 @@ class Course extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'paddle_product_id',
+        'title',
+        'tagline',
+        'description',
+        'image_name',
+        'learnings',
+        'slug',
+        'released_at',
+    ];
+
     protected $casts = [
         'learnings' => 'array',
     ];
