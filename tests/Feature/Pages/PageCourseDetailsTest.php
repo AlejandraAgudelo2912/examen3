@@ -1,10 +1,18 @@
 <?php
 
 use App\Models\Course;
+use App\Models\User;
 use App\Models\Video;
 
 use Juampi92\TestSEO\TestSEO;
+use Spatie\Permission\Models\Role;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
+
+beforeEach(function () {
+    Role::firstOrCreate(['name' => 'admin']);
+    Role::firstOrCreate(['name' => 'client']);
+});
 
 it('does not find unreleased course', function () {
     // Arrange
@@ -93,4 +101,29 @@ it('includes social tags', function () {
         ->openGraph()->description->toBe($course->description)
         ->openGraph()->image->toBe(asset("images/{$course->image_name}"))
         ->twitter()->card->toBe('summary_large_image');
+});
+
+it('shows button to buy course if you are a client', function () {
+    // Arrange
+    $course = Course::factory()->released()->create();
+    $user = loginAsUser();
+    $user->assignRole('client');
+
+    // Act & Assert
+    actingAs($user)->get(route('pages.course-details', $course))
+        ->assertOk()
+        ->assertSeeText('Buy Now');
+});
+
+it('does not show button to buy course if you are an admin', function () {
+    // Arrange
+    $course = Course::factory()->released()->create();
+
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    // Act & Assert
+    actingAs($admin)->get(route('pages.course-details', $course))
+        ->assertOk()
+        ->assertDontSeeText('Buy Now');
 });

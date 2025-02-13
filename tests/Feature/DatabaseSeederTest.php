@@ -3,6 +3,7 @@
 use App\Models\Course;
 use App\Models\User;
 use App\Models\Video;
+use Spatie\Permission\Models\Role;
 
 it('adds given courses', function () {
     // Assert
@@ -75,7 +76,7 @@ it('adds local test user', function () {
     $this->artisan('db:seed');
 
     // Assert
-    $this->assertDatabaseCount(User::class, 1);
+    $this->assertDatabaseCount(User::class, 2);
 });
 
 it('does not test user for production', function () {
@@ -89,5 +90,18 @@ it('does not test user for production', function () {
     $this->artisan('db:seed');
 
     // Assert
-    $this->assertDatabaseCount(User::class, 0);
+    $this->assertDatabaseCount(User::class, 1);
+});
+
+it('adds two roles, admin and client', function () {
+    // Assert
+    $this->assertDatabaseCount(Role::class, 0);
+
+    // Act
+    $this->artisan('db:seed');
+
+    // Assert
+    $this->assertDatabaseCount(Role::class, 2);
+    $this->assertDatabaseHas(Role::class, ['name' => 'admin']);
+    $this->assertDatabaseHas(Role::class, ['name' => 'client']);
 });
