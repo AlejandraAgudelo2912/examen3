@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreVideoRequest;
+use App\Http\Requests\UpdateVideoRequest;
 use App\Models\Course;
 use App\Models\Video;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class VideoController extends Controller
@@ -21,15 +22,9 @@ class VideoController extends Controller
         return view('admin.videos.create', compact('courses'));
     }
 
-    public function store(Request $request)
+    public function store(StoreVideoRequest $request)
     {
-        $validated = $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'duration_in_min' => 'required|integer|min:1',
-            'vimeo_id' => 'required|string|unique:videos,vimeo_id',
-        ]);
+        $validated = $request->validated();
 
         $validated['slug'] = Str::slug($validated['title']);
 
@@ -44,15 +39,9 @@ class VideoController extends Controller
         return view('admin.videos.edit', compact('video', 'courses'));
     }
 
-    public function update(Request $request, Video $video)
+    public function update(UpdateVideoRequest $request, Video $video)
     {
-        $validated = $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'duration_in_min' => 'required|integer|min:1',
-            'vimeo_id' => 'required|string|unique:videos,vimeo_id,' . $video->id,
-        ]);
+        $validated = $request->validated();
 
         $validated['slug'] = Str::slug($validated['title']);
 
