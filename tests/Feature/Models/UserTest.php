@@ -34,17 +34,17 @@ it('has videos', function () {
         ->each->toBeInstanceOf(Video::class);
 });
 
-it('identifies an admin user', function () {
+it('is an admin user', function () {
     // Arrange
-    $admin = User::factory()->asAdmin()->create();
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
 
-    $admin->refresh();
     // Act & Assert
     expect($admin->isAdmin())->toBeTrue();
     expect($admin->isClient())->toBeFalse();
 });
 
-it('identifies a client user', function () {
+it('is a client user ', function () {
     // Arrange
     $client = User::factory()->create();
     $client->assignRole('client');
