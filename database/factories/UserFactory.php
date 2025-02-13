@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
+use Spatie\Permission\Models\Role;
 
 class UserFactory extends Factory
 {
@@ -69,5 +70,25 @@ class UserFactory extends Factory
                 }),
             'ownedTeams'
         );
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            $role = Role::where('name', 'client')->first();
+            if ($role) {
+                $user->assignRole($role);
+            }
+        });
+    }
+
+    public function asAdmin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $role = Role::where('name', 'admin')->first();
+            if ($role) {
+                $user->assignRole($role);
+            }
+        });
     }
 }

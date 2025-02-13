@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,6 +19,13 @@ class DatabaseSeeder extends Seeder
             AddGivenCoursesSeeder::class,
             AddGivenVideosSeeder::class,
             AddLocalTestUserSeeder::class,
+            RolesAndPermissionsSeeder::class
         ]);
+
+        $admin = User::firstOrCreate(['email' => 'admin@gmail.com'], [
+            'name' => 'Admin',
+            'password' => bcrypt('12345678'),
+        ]);
+        $admin->assignRole('admin');
     }
 }

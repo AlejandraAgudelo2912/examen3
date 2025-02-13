@@ -3,6 +3,12 @@
 use App\Models\Course;
 use App\Models\User;
 use App\Models\Video;
+use Spatie\Permission\Models\Role;
+
+beforeEach(function () {
+    Role::firstOrCreate(['name' => 'admin']);
+    Role::firstOrCreate(['name' => 'client']);
+});
 
 it('has courses', function () {
     // Arrange
@@ -26,4 +32,24 @@ it('has videos', function () {
     expect($user->watchedVideos)
         ->toHaveCount(2)
         ->each->toBeInstanceOf(Video::class);
+});
+
+it('identifies an admin user', function () {
+    // Arrange
+    $admin = User::factory()->asAdmin()->create();
+
+    $admin->refresh();
+    // Act & Assert
+    expect($admin->isAdmin())->toBeTrue();
+    expect($admin->isClient())->toBeFalse();
+});
+
+it('identifies a client user', function () {
+    // Arrange
+    $client = User::factory()->create();
+    $client->assignRole('client');
+
+    // Act & Assert
+    expect($client->isClient())->toBeTrue();
+    expect($client->isAdmin())->toBeFalse();
 });

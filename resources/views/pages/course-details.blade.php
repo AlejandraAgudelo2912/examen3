@@ -26,16 +26,20 @@
                         </h2>
                         <p class="block text-yellow-500 text-2xl mb-0">{{ $course->title }} ({{ $course->videos_count }} videos)</p>
                         <p class="mt-4 text-lg leading-6 text-gray-900">{{ $course->description }}</p>
-                        <a href="#" data-theme="light" class="paddle_button mt-8 inline-flex items-center rounded-md border border-transparent bg-yellow-400 py-3 px-6 text-base font-medium text-gray-900 shadow hover:text-red-500"
-                           data-items='[
-                                 {
-                                     "priceId": "{{ $course->paddle_product_id }}",
-                                     "quantity": 1
-                                 }
-                           ]'
-                        >
-                            Buy Now!
-                        </a>
+                        @if(auth()->check() && auth()->user()->hasRole('client'))
+                            <a href="#" data-theme="light" class="paddle_button mt-8 inline-flex items-center rounded-md border border-transparent bg-yellow-400 py-3 px-6 text-base font-medium text-gray-900 shadow hover:text-red-500"
+                               data-items='[
+                                     {
+                                         "priceId": "{{ $course->paddle_product_id }}",
+                                         "quantity": 1
+                                     }
+                               ]'
+                            >
+                                Buy Now!
+                            </a>
+                        @elseif(auth()->check() && auth()->user()->hasRole('admin'))
+                            <p class="mt-4 text-red-500 font-bold">Los administradores no pueden comprar cursos.</p>
+                        @endif
                         <h3>Learnings</h3>
                         <ul>
                             @foreach($course->learnings as $learning)

@@ -22,6 +22,10 @@ Route::get('/', PageHomeController::class)->name('pages.home');
 Route::get('courses/{course:slug}', PageCourseDetailsController::class)
     ->name('pages.course-details');
 
+Route::middleware(['auth', 'can:buy-course'])
+    ->post('courses/{course:slug}', PageCourseDetailsController::class)
+    ->name('purchase');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
