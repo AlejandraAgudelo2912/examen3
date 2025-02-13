@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCourseRequest;
+use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Course;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class CourseController extends Controller
@@ -19,16 +20,9 @@ class CourseController extends Controller
         return view('admin.courses.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreCourseRequest $request)
     {
-        $validated = $request->validate([
-            'paddle_product_id' => 'required|string|unique:courses,paddle_product_id',
-            'title' => 'required|string|max:255',
-            'tagline' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image_name' => 'required|string',
-            'learnings' => 'required|array',
-        ]);
+        $validated = $request->validated();
 
         $validated['slug'] = Str::slug($validated['title']);
 
@@ -42,7 +36,7 @@ class CourseController extends Controller
         return view('admin.courses.edit', compact('course'));
     }
 
-    public function update(Request $request, Course $course)
+    public function update(UpdateCourseRequest $request, Course $course)
     {
         if ($request->has('released_at')) {
             if ($course->videos()->exists()) {
@@ -53,15 +47,7 @@ class CourseController extends Controller
             }
         }
 
-        $validated = $request->validate([
-            'paddle_product_id' => 'required|string|unique:courses,paddle_product_id,' . $course->id,
-            'title' => 'required|string|max:255',
-            'tagline' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image_name' => 'required|string',
-            'learnings' => 'required|array',
-            'released_at' => 'nullable|date',
-        ]);
+        $validated = $request->validated();
 
         $validated['slug'] = Str::slug($validated['title']);
         $course->update($validated);
